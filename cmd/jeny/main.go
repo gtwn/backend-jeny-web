@@ -35,5 +35,7 @@ func main() {
 		ChannelSecret	: cfg.ChannelSecret,
 	}))
 
+	e.GET("/logout",route.Revoke())
+
 	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
 }

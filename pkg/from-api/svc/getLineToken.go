@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Context) (*model.Profile,error) {
+func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Context) (*model.AuthSuccess,*model.Profile,error) {
 
 	client := resty.New()
 	code := c.QueryParam("code")
@@ -28,7 +28,7 @@ func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Co
 		}).
 		SetResult(&authSuccess). // or SetResult(AuthSuccess{}).
 		Post("https://api.line.me/oauth2/v2.1/token") ; err != nil {
-			return nil,err
+			return nil,nil,err
 	}
 	
 	fmt.Println("AccessToken: ",authSuccess.AccessToken)
@@ -37,8 +37,8 @@ func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Co
 		SetHeader("Authorization", "Bearer "+authSuccess.AccessToken).
 		SetResult(&profile). // or SetResult(AuthSuccess{}).
 		Get("https://api.line.me/v2/profile") ; err != nil {
-			return nil,err
+			return nil,nil,err
 	}
 
-	return &profile,nil
+	return &authSuccess,&profile,nil
 }
