@@ -10,13 +10,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Context) (*model.AuthSuccess,*md.Payload,*model.Profile,error) {
+func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Context) (*model.AuthSuccess,*md.Payload,error) {
 
 	client := resty.New()
 	code := c.QueryParam("code")
 	url := c.Request().Host
 	redirectURI := fmt.Sprintf("https://%s/callback",url)
-	
 
 	authSuccess := model.AuthSuccess{}
 	if _,err := client.R().
@@ -30,24 +29,24 @@ func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Co
 		}).
 		SetResult(&authSuccess). // or SetResult(AuthSuccess{}).
 		Post("https://api.line.me/oauth2/v2.1/token") ; err != nil {
-			return nil,nil,nil,err
+			return nil,nil,err
 	}
 	
-	fmt.Println("AccessToken: ",authSuccess.IDToken)
-	profile := model.Profile{}
-	if _,err := client.R().
-		SetHeader("Authorization", "Bearer "+authSuccess.AccessToken).
-		SetResult(&profile). // or SetResult(AuthSuccess{}).
-		Get("https://api.line.me/v2/profile") ; err != nil {
-			return nil,nil,nil,err
-	}
+	// fmt.Println("AccessToken: ",authSuccess.IDToken)
+	// profile := model.Profile{}
+	// if _,err := client.R().
+	// 	SetHeader("Authorization", "Bearer "+authSuccess.AccessToken).
+	// 	SetResult(&profile). // or SetResult(AuthSuccess{}).
+	// 	Get("https://api.line.me/v2/profile") ; err != nil {
+	// 		return nil,nil,nil,err
+	// }
 
 	payload,err := jwt.DecodeIDToken(authSuccess.IDToken) 
 	if err != nil{
-		return nil,nil,nil,err
+		return nil,nil,err
 	}
 
 
 
-	return &authSuccess,payload,&profile,nil
+	return &authSuccess,payload,nil
 }
