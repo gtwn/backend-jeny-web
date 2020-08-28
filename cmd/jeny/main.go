@@ -59,11 +59,6 @@ func main() {
 	if err != nil {
 		logrus.WithError(err).Fatal("Ping Error")
 	}
-	// db, err := client.ListDatabaseNames(ctx, bson.M{})
-	// if err != nil {
-	// 	logrus.WithError(err).Fatal("Can't read dbNames")
-	// }
-	// fmt.Println(db)
 
 	db := client.Database(cfg.DBName)
 	

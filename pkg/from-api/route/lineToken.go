@@ -2,6 +2,7 @@ package route
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	// "github.com/davecgh/go-spew/spew"
@@ -29,6 +30,7 @@ type RespAuth struct {
 	Refresh			string
 	Expire			time.Time
 	Task			[]model.Task
+	FollowTask		[]model.Task
 }
 
 func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
@@ -37,6 +39,7 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 
 		var userResult model.User
 		var taskResult []model.Task
+		var taskFollowResult []model.Task
 
 		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 		userCollection := db.Collection("user")
@@ -72,13 +75,21 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 				}
 			}
 		}
-		
-		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":userResult.DisplayName}) 
+		fmt.Print(userResult.DisplayName)
+		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":payload.Name}) 
 		if err != nil {
 			// return err
 		}
 		if err := taskFind.All(ctx,&taskResult) ; err != nil {
 			// return err
+		}
+
+		followTask,err := taskCollection.Find(ctx, bson.M{"order_by":payload.Name})
+		if err != nil {
+
+		}
+		if err := followTask.All(ctx,&taskFollowResult) ; err != nil {
+
 		}
 		
 		refresh := authSucess.RefreshToken
@@ -89,6 +100,7 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 			Refresh: refresh,
 			Expire: expire,
 			Task: taskResult,
+			FollowTask: taskFollowResult,
 		})
 	}
 }
