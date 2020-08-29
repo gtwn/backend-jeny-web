@@ -4,20 +4,20 @@ import (
 	"context"
 	"time"
 
-	"github.com/jenywebapp/pkg/from-api/model"
+	"github.com/jenywebapp/pkg/task/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 
-func GetFollow(display []string, taskCollection *mongo.Collection) (*[]model.Task,error) {
+func Follow(display []string, taskCollection *mongo.Collection) (*[]model.Task,error) {
 	var followTaskResult []model.Task
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	
 	for _,disp := range display {
 		var task []model.Task
-		taskFind,err := taskCollection.Find(ctx, bson.M{"order_by":disp,"status":"In Progress"})
+		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp})
 		if err != nil {
 			
 		}

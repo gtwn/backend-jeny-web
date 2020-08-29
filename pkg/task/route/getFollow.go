@@ -15,7 +15,7 @@ import (
 )
 
 
-func GetTask(db *mongo.Database) echo.HandlerFunc {
+func GetFollow(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		

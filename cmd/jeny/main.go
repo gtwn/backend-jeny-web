@@ -101,7 +101,12 @@ func main() {
 		},db))
 
 	e.GET("/logout",route.Revoke())
-	e.GET("/task",routeTask.GetTask(db))
+	taskGrp := e.Group("/task")
+
+	taskGrp.GET("/",routeTask.GetTask(db))
+	taskGrp.GET("/follow",routeTask.GetFollow(db))
+	taskGrp.GET("/review",routeTask.GetReview(db))
+	taskGrp.GET("/history",routeTask.GetHistory(db))
 
 	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
 }

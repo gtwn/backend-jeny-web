@@ -15,7 +15,7 @@ import (
 )
 
 
-func GetTask(db *mongo.Database) echo.HandlerFunc {
+func GetHistory(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		
@@ -36,11 +36,14 @@ func GetTask(db *mongo.Database) echo.HandlerFunc {
 			return err
 		}
 
-		task,err := svc.Task(user.DisplayName,taskCollection)
+		historyTask,historyFollow,err := svc.History(user.DisplayName,taskCollection)
 		if err != nil {
 			return err
 		}
 		
-		return c.JSON(200,task)
+		return c.JSON(200,model.HistoryResponse{
+			TaskHistory: *historyTask,
+			FollowHistory: *historyFollow,
+		})
 	}
 }

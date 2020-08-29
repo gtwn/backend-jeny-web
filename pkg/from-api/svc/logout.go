@@ -9,11 +9,11 @@ import (
 func LogOut(c echo.Context) error {
 
 	client := resty.New()
-	refresToken := c.QueryParam("refress_token")
+	resfresh := c.Request().Header.Get("resfresh_token")
 	if _,err := client.R().
 		SetHeader("Content-Type","application/x-www-form-urlencoded").
 		SetFormData(map[string]string{
-			"refresh_token": refresToken,
+			"refresh_token": resfresh,
 		}).Post("https://api.line.me/v2/oauth/revoke") ; err != nil {
 			return err
 		}
