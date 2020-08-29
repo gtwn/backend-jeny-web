@@ -8,6 +8,8 @@ import (
 
 	"github.com/jenywebapp/cmd/jeny/config"
 	route "github.com/jenywebapp/pkg/from-api/route"
+	routeTask "github.com/jenywebapp/pkg/task/route"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -99,6 +101,7 @@ func main() {
 		},db))
 
 	e.GET("/logout",route.Revoke())
+	e.GET("/task",routeTask.GetTask(db))
 
 	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
 }

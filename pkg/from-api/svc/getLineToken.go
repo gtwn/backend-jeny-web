@@ -32,15 +32,6 @@ func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Co
 			return nil,nil,err
 	}
 	
-	// fmt.Println("AccessToken: ",authSuccess.IDToken)
-	// profile := model.Profile{}
-	// if _,err := client.R().
-	// 	SetHeader("Authorization", "Bearer "+authSuccess.AccessToken).
-	// 	SetResult(&profile). // or SetResult(AuthSuccess{}).
-	// 	Get("https://api.line.me/v2/profile") ; err != nil {
-	// 		return nil,nil,nil,err
-	// }
-
 	payload,err := jwt.DecodeIDToken(authSuccess.IDToken) 
 	if err != nil{
 		return nil,nil,err

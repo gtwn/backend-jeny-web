@@ -2,7 +2,6 @@ package route
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	// "github.com/davecgh/go-spew/spew"
@@ -10,6 +9,8 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jenywebapp/pkg/from-api/model"
 	"github.com/jenywebapp/pkg/from-api/svc"
+	sv "github.com/jenywebapp/pkg/svc"
+
 	md "github.com/jenywebapp/pkg/jwt/model"
 	"github.com/labstack/echo/v4"
 
@@ -38,8 +39,6 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		var userResult model.User
-		var taskResult []model.Task
-		var taskFollowResult []model.Task
 
 		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 		userCollection := db.Collection("user")
@@ -49,6 +48,12 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
+		refresh := authSucess.RefreshToken
+		expire := time.Unix(payload.Exp,0)
+		if sv.CheckExpire(expire) != true {
+			return c.NoContent(401)
+		}
+
 		// Display ไม่มี อาจจะเปลี่ยนชื่อหรือไม่มีตั้งแต่ต้น
 		if err := userCollection.FindOne(ctx, bson.M{"display":payload.Name}).Decode(&userResult) ;err != nil {
 
@@ -72,35 +77,26 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 					}) ; err != nil {
 						spew.Dump("Update error",err)
 						return err
-				}
+				} 
+				
 			}
 		}
-		fmt.Print(userResult.DisplayName)
-		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":payload.Name}) 
-		if err != nil {
-			// return err
-		}
-		if err := taskFind.All(ctx,&taskResult) ; err != nil {
-			// return err
+
+		var userProfile model.User
+		if err := userCollection.FindOne(ctx, bson.M{"user_id":payload.Sub}).Decode(&userProfile) ; err != nil {
+			return err
 		}
 
-		followTask,err := taskCollection.Find(ctx, bson.M{"order_by":payload.Name})
-		if err != nil {
-
-		}
-		if err := followTask.All(ctx,&taskFollowResult) ; err != nil {
-
-		}
+		taskResp,err := svc.GetTask(userProfile.DisplayName,taskCollection)
+		followResp,err := svc.GetFollow(userProfile.DisplayName,taskCollection)
 		
-		refresh := authSucess.RefreshToken
-		expire := time.Unix(payload.Exp,0)
 
 		return c.JSON(200,RespAuth{
 			Payload: *payload,
 			Refresh: refresh,
 			Expire: expire,
-			Task: taskResult,
-			FollowTask: taskFollowResult,
+			Task: *taskResp,
+			FollowTask: *followResp,
 		})
 	}
 }
