@@ -18,7 +18,6 @@ import (
 func GetFollow(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
-		
 		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 		userCollection := db.Collection("user")
 		taskCollection := db.Collection("task")
