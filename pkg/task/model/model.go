@@ -34,3 +34,13 @@ type ReviewResponse struct {
 	TaskReview		[]Task
 	FollowReview	[]Task
 }
+
+type Msg struct {
+	Type	string			`json:"type"`
+	Text	string			`json:"text"`
+}
+
+type PushMsg struct {
+	To 			string		`json:"to"`
+	Message 	[]Msg		`json:"message"`
+}
