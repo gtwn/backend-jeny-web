@@ -103,10 +103,16 @@ func main() {
 	e.GET("/logout",route.Revoke())
 	taskGrp := e.Group("/task")
 
-	taskGrp.GET("/",routeTask.GetTask(db))
+	taskGrp.GET("",routeTask.GetTask(db))
 	taskGrp.GET("/follow",routeTask.GetFollow(db))
 	taskGrp.GET("/review",routeTask.GetReview(db))
 	taskGrp.GET("/history",routeTask.GetHistory(db))
 
+	requestGrp := e.Group("/request")
+
+	requestGrp.POST("/review/:id",routeTask.SendReviewTask(routeTask.ReviewTaskConfig{
+		AccessToken: cfg.ChannelAccessToken,
+	},db))
+	fmt.Printf(cfg.ChannelAccessToken)
 	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
 }

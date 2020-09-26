@@ -17,7 +17,7 @@ func Task(display []string, taskCollection *mongo.Collection) (*[]model.Task,err
 	
 	for _,disp := range display {
 		var task []model.Task
-		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp})
+		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp,"status":"In Progress"})
 		if err != nil {
 			
 		}

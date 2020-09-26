@@ -10,11 +10,11 @@ import (
 	"github.com/jenywebapp/pkg/task/svc"
 	"go.mongodb.org/mongo-driver/mongo"
 )
-type cfgReviewTask struct {
+type ReviewTaskConfig struct {
 	AccessToken	string
 }
 
-func SendReviewTask(db *mongo.Database,cfg cfgReviewTask) echo.HandlerFunc {
+func SendReviewTask(cfg ReviewTaskConfig,db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		id := c.Param("id")

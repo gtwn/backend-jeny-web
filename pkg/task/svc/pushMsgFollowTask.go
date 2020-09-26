@@ -1,7 +1,6 @@
 package svc
 
 import (
-	// "encoding/json"
 	"encoding/json"
 	"fmt"
 
@@ -10,7 +9,7 @@ import (
 	"github.com/jenywebapp/pkg/task/model"
 )
 
-func PushMsgSendTask (Task *model.Task,AccessToken string,Display string,UserID string) error {
+func PushMsgFollowTask (Task *model.Task,AccessToken string,Display string,UserID string) error {
 	
 	client := resty.New()
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
@@ -32,12 +31,10 @@ func PushMsgSendTask (Task *model.Task,AccessToken string,Display string,UserID 
 		To: Task.FromID,
 		Message: *msgFollow,
 	}
-	// spew.Dump(msgFollow)
 	jsonSend,err := json.Marshal(pushSend)
 	if err != nil{
 		return err
 	}
-	fmt.Printf(string(jsonSend))
 	jsonFollow,err := json.Marshal(pushToFollow)
 	if err != nil {
 		return err

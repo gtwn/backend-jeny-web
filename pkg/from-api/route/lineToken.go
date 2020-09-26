@@ -32,6 +32,7 @@ type RespAuth struct {
 	Expire			time.Time
 	Task			[]model.Task
 	FollowTask		[]model.Task
+	Token			string
 }
 
 func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
@@ -97,6 +98,7 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 			Expire: expire,
 			Task: *taskResp,
 			FollowTask: *followResp,
+			Token: authSucess.IDToken,
 		})
 	}
 }

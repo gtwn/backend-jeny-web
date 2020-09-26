@@ -7,6 +7,7 @@ import (
 type Config struct {
 	Debug        	bool
 	Port         	int    `required:"true"`
+	ChannelAccessToken		string `envconfig:"channel_access_token" require:"true"`
 	ChannelID	 	string `envconfig:"channel_id" require:"true"`
 	ChannelSecret 	string	`envconfig:"channel_secret" require:"true"`
 	LineTokenAPI 	string `envconfig:"line_token_api" require:"true"`

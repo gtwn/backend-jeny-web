@@ -42,5 +42,5 @@ type Msg struct {
 
 type PushMsg struct {
 	To 			string		`json:"to"`
-	Message 	[]Msg		`json:"message"`
+	Message 	[]Msg		`json:"messages"`
 }
