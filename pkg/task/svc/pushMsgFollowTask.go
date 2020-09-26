@@ -30,6 +30,7 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,User
 
 	// กรณีไม่มี User ในระบบให้ส่งตามใน Group แทน
 	if User == nil {
+		fmt.Printf("user is nil"+Task.GroupID)
 		pushToFollow := &model.PushMsg{
 			To: Task.GroupID,
 			Message: *msgFollow,
@@ -48,6 +49,7 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,User
 			return err
 		}	
 	} else {	// มี user ในระบบ
+		fmt.Printf("user is not nil"+User.UserID)
 		pushToFollow := &model.PushMsg{
 			To: User.UserID,
 			Message: *msgFollow,

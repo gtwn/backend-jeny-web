@@ -16,12 +16,12 @@ func PushMsgDoneTask(Task *model.Task,AccessToken string,UserID string) error {
 	// ส่งแจ้งเตือนเรา
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณตรวจงาน"+Task.Task+"\nให้คุณ"+Task.OrderTo+"\nสถานะ: ผ่านการตรวจสอบ\n",
+		Text: "คุณตรวจงาน: "+Task.Task+"\nให้คุณ: "+Task.OrderTo+"\nสถานะ: ผ่านการตรวจสอบ\n",
 	}}
 	// ส่งแจ้งเตือนอีกคน
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Task.OrderBy+"ตรวจงาน: "+Task.Task+"\nสถานะ: ผ่านการตรวจสอบ",
+		Text: "คุณ: "+Task.OrderBy+"ตรวจงาน: "+Task.Task+"\nสถานะ: ผ่านการตรวจสอบ",
 	}}
 	// ส่งหาเรา
 	pushSend := &model.PushMsg{
@@ -29,7 +29,7 @@ func PushMsgDoneTask(Task *model.Task,AccessToken string,UserID string) error {
 		Message: *msgSend}
 	// ส่งหาคนส่งงาน
 	pushToFollow := &model.PushMsg{
-		To: Task.FromID,
+		To: UserID,
 		Message: *msgFollow,
 	}
 	// spew.Dump(msgFollow)

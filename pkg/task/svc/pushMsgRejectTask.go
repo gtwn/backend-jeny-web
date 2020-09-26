@@ -16,12 +16,12 @@ func PushMsgRejectTask(Task *model.Task,AccessToken string,UserID string) error 
 	// ส่งแจ้งเตือนเรา
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณตรวจงาน"+Task.Task+"\nให้คุณ"+Task.OrderTo+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ",
+		Text: "คุณตรวจงาน: "+Task.Task+"\nให้คุณ: "+Task.OrderTo+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ",
 	}}
 	// ส่งแจ้งเตือนอีกคน
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Task.OrderBy+"ตรวจงาน: "+Task.Task+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ\nกรุณาทำการตรวจสอบงานและส่งใหม่อีกครั้งค่ะ",
+		Text: "คุณ: "+Task.OrderBy+"ตรวจงาน: "+Task.Task+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ\nกรุณาทำการตรวจสอบงานและส่งใหม่อีกครั้งค่ะ",
 	}}
 	// ส่งหาเรา
 	pushSend := &model.PushMsg{

@@ -15,11 +15,11 @@ func PushMsgSendTask(Task *model.Task,AccessToken string,Display string,UserID s
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณส่งงาน"+Task.Task+"\nให้คุณ"+Task.OrderBy+"\nสถานะ: รอการตรวจสอบ\n",
+		Text: "คุณส่งงาน: "+Task.Task+"\nให้คุณ: "+Task.OrderBy+"\nสถานะ: รอการตรวจสอบ\n",
 	}}
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Display+"ส่งงานให้คุณ\n กรุณาตรวจสอบงานด้วยค่ะ",
+		Text: "คุณ: "+Display+"ส่งงานให้คุณ\n กรุณาตรวจสอบงานด้วยค่ะ",
 	}}
 	// my
 	pushSend := &model.PushMsg{
