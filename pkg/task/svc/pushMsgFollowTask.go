@@ -15,12 +15,12 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,User
 	// ส่งแจ้งเตือนเรา
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณได้กดติดตามงาน"+Task.Task+"\nของคุณ"+Task.OrderTo+"แล้วค่ะ",
+		Text: "คุณได้กดติดตามงาน: "+Task.Task+"\nของคุณ"+Task.OrderTo+"แล้วค่ะ",
 	}}
 	// ส่งตามงาน
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Task.OrderTo+"กรุณาส่งงาน"+Task.Task+"ด้วยค่ะ\n"+"จาก"+Task.OrderBy,
+		Text: "คุณ: "+Task.OrderTo+"\nกรุณาส่งงาน: "+Task.Task+"ด้วยค่ะ\n"+"จาก"+Task.OrderBy,
 	}}
 	// ส่งแจ้งเตือนให้เราว่ามีการกดติดตามงาน
 	pushSend := &model.PushMsg{
