@@ -9,23 +9,25 @@ import (
 	"github.com/jenywebapp/pkg/task/model"
 )
 
-func PushMsgSendTask(Task *model.Task,AccessToken string,Display string,UserID string) error {
+func PushMsgRejectTask(Task *model.Task,AccessToken string,UserID string) error {
 	
 	client := resty.New()
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
+	// ส่งแจ้งเตือนเรา
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณส่งงาน"+Task.Task+"\nให้คุณ"+Task.OrderBy+"\nสถานะ: รอการตรวจสอบ\n",
+		Text: "คุณตรวจงาน"+Task.Task+"\nให้คุณ"+Task.OrderTo+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ",
 	}}
+	// ส่งแจ้งเตือนอีกคน
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Display+"ส่งงานให้คุณ\n กรุณาตรวจสอบงานด้วยค่ะ",
+		Text: "คุณ"+Task.OrderBy+"ตรวจงาน: "+Task.Task+"\nสถานะ: ยังไม่ผ่านการตรวจสอบ\nกรุณาทำการตรวจสอบงานและส่งใหม่อีกครั้งค่ะ",
 	}}
-	// my
+	// ส่งหาเรา
 	pushSend := &model.PushMsg{
-		To: UserID,
+		To: Task.FromID,
 		Message: *msgSend}
-	// Commander
+	// ส่งหาคนส่งงาน
 	pushToFollow := &model.PushMsg{
 		To: Task.FromID,
 		Message: *msgFollow,

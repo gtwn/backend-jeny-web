@@ -4,51 +4,74 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/davecgh/go-spew/spew"
 	resty "github.com/go-resty/resty/v2"
 	"github.com/jenywebapp/pkg/task/model"
 )
 
-func PushMsgFollowTask (Task *model.Task,AccessToken string,Display string,UserID string) error {
+func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,UserID string) error {
 	
 	client := resty.New()
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
-	spew.Dump(auth)
+	// ส่งแจ้งเตือนเรา
 	msgSend := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณส่งงาน"+Task.Task+"\nให้คุณ"+Task.OrderBy+"\nสถานะ: รอการตรวจสอบ\n",
+		Text: "คุณได้กดติดตามงาน"+Task.Task+"\nของคุณ"+Task.OrderTo+"แล้วค่ะ",
 	}}
+	// ส่งตามงาน
 	msgFollow := &[]model.Msg{
 		{Type: "text",
-		Text: "คุณ"+Display+"ส่งงานให้คุณ\n กรุณาตรวจสอบงานด้วยค่ะ",
+		Text: "คุณ"+Task.OrderTo+"กรุณาส่งงาน"+Task.Task+"ด้วยค่ะ\n"+"จาก"+Task.OrderBy,
 	}}
-	// my
+	// ส่งแจ้งเตือนให้เราว่ามีการกดติดตามงาน
 	pushSend := &model.PushMsg{
 		To: UserID,
 		Message: *msgSend}
-	// Commander
-	pushToFollow := &model.PushMsg{
-		To: Task.FromID,
-		Message: *msgFollow,
+	// ส่งแจ้งเตือนให้คนที่เราตามงาน
+
+	// กรณีไม่มี User ในระบบให้ส่งตามใน Group แทน
+	if User == nil {
+		pushToFollow := &model.PushMsg{
+			To: Task.GroupID,
+			Message: *msgFollow,
+		}
+		jsonFollow,err := json.Marshal(pushToFollow)
+		if err != nil {
+			return err
+		}
+		// ส่งหาคนสั่ง
+	
+		if _,err := client.R().
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"Authorization" : auth,
+		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+			return err
+		}	
+	} else {	// มี user ในระบบ
+		pushToFollow := &model.PushMsg{
+			To: User.UserID,
+			Message: *msgFollow,
+		}
+		jsonFollow,err := json.Marshal(pushToFollow)
+		if err != nil {
+			return err
+		}
+		// ส่งหาคนสั่ง
+	
+		if _,err := client.R().
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"Authorization" : auth,
+		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+			return err
+		}	
 	}
+	
 	jsonSend,err := json.Marshal(pushSend)
 	if err != nil{
 		return err
 	}
-	jsonFollow,err := json.Marshal(pushToFollow)
-	if err != nil {
-		return err
-	}
-
-	// ส่งหาคนสั่ง
 	
-	if _,err := client.R().
-	SetHeaders(map[string]string{
-		"Content-Type": "application/json",
-		"Authorization" : auth,
-	}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
-		return err
-	}	
 	// ส่งหาเรา
 	if _,err := client.R().
 	SetHeaders(map[string]string{

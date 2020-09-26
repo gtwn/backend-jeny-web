@@ -14,28 +14,28 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-type User struct {
-	ID 		primitive.ObjectID	`bson:"_id,omitempty"`
-	User 	string				`bson:"user,omitempty"`
-	Gen 	[]string			`bson:"gen,omitempty"`
+// type User struct {
+// 	ID 		primitive.ObjectID	`bson:"_id,omitempty"`
+// 	User 	string				`bson:"user,omitempty"`
+// 	Gen 	[]string			`bson:"gen,omitempty"`
 
-}
+// }
 
-type Task struct {
-	ID          primitive.ObjectID 	`bson:"_id,omitempty"`
-	OrderBy     string             	`bson:"order_by,omitempty"`
-	Task        string             	`bson:"task,omitempty"`
-	OrderTo     string             	`bson:"order_to,omitempty"`
-	Deadline    string          	`bson:"deadline,omitempty"`
-	CreatedAt   time.Time          	`bson:"created_at,omitempty"`
-	DoneAt      string          	`bson:"done_at,omitempty"`
-}
+// type Task struct {
+// 	ID          primitive.ObjectID 	`bson:"_id,omitempty"`
+// 	OrderBy     string             	`bson:"order_by,omitempty"`
+// 	Task        string             	`bson:"task,omitempty"`
+// 	OrderTo     string             	`bson:"order_to,omitempty"`
+// 	Deadline    string          	`bson:"deadline,omitempty"`
+// 	CreatedAt   time.Time          	`bson:"created_at,omitempty"`
+// 	DoneAt      string          	`bson:"done_at,omitempty"`
+// }
 
 func main() {
 
@@ -113,6 +113,15 @@ func main() {
 	requestGrp.POST("/review/:id",routeTask.SendReviewTask(routeTask.ReviewTaskConfig{
 		AccessToken: cfg.ChannelAccessToken,
 	},db))
-	fmt.Printf(cfg.ChannelAccessToken)
+	requestGrp.POST("/follow/:id",routeTask.SendFollowTask(routeTask.FollowTaskConfig{
+		AccessToken: cfg.ChannelAccessToken,
+	},db))
+	requestGrp.POST("/accept/:id",routeTask.SendDoneTask(routeTask.DoneTaskConfig{
+		AccessToken: cfg.ChannelAccessToken,
+	},db))
+	requestGrp.POST("/reject/:id",routeTask.SendRejectTask(routeTask.RejectTaskConfig{
+		AccessToken: cfg.ChannelAccessToken,
+	},db))
+	
 	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
 }
