@@ -19,6 +19,9 @@ func SendReviewTask(cfg ReviewTaskConfig,db *mongo.Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
+		if header == ""{
+			return c.NoContent(401)
+		}
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		taskCollection := db.Collection("task")

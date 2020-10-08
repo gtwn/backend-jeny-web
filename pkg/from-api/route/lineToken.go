@@ -9,9 +9,12 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jenywebapp/pkg/from-api/model"
 	"github.com/jenywebapp/pkg/from-api/svc"
+	"github.com/jenywebapp/pkg/jwt"
+
+	// "github.com/jenywebapp/pkg/jwt"
 	sv "github.com/jenywebapp/pkg/svc"
 
-	md "github.com/jenywebapp/pkg/jwt/model"
+	// md "github.com/jenywebapp/pkg/jwt/model"
 	"github.com/labstack/echo/v4"
 
 	// "go.mongodb.org/mongo-driver/bson"
@@ -26,12 +29,12 @@ type LineTokenConfig struct {
 }
 
 type RespAuth struct {
-	Profile 		model.Profile
-	Payload 		md.Payload
-	Refresh			string
-	Expire			time.Time
-	Task			[]model.Task
-	FollowTask		[]model.Task
+	// Profile 		model.Profile
+	// Payload 		md.Payload
+	// Refresh			string
+	// Expire			time.Time
+	Task			[]model.Task		`json:"task"`
+	FollowTask		[]model.Task		`json:"follow"`
 	Token			string
 }
 
@@ -45,11 +48,19 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 		userCollection := db.Collection("user")
 		taskCollection := db.Collection("task")
 
-		authSucess,payload,err := svc.GetLineToken(cfg.LineAPI,cfg.ChannelID,cfg.ChannelSecret,c)
+		// authSucess,payload,err := svc.GetLineToken(cfg.LineAPI,cfg.ChannelID,cfg.ChannelSecret,c)
+		// if err != nil {
+		// 	return err
+		// }
+		// refresh := authSucess.RefreshToken
+		header := c.Request().Header.Get("Authorization")
+		if header == "" {
+			return c.NoContent(401)
+		}
+		payload, err := jwt.DecodeIDToken(header)
 		if err != nil {
 			return err
 		}
-		refresh := authSucess.RefreshToken
 		expire := time.Unix(payload.Exp,0)
 		if sv.CheckExpire(expire) != true {
 			return c.NoContent(401)
@@ -93,12 +104,9 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 		
 
 		return c.JSON(200,RespAuth{
-			Payload: *payload,
-			Refresh: refresh,
-			Expire: expire,
 			Task: *taskResp,
 			FollowTask: *followResp,
-			Token: authSucess.IDToken,
+			// Token: authSucess.IDToken,
 		})
 	}
 }

@@ -23,6 +23,9 @@ func GetReview(db *mongo.Database) echo.HandlerFunc {
 		userCollection := db.Collection("user")
 		taskCollection := db.Collection("task")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
+		if header == ""{
+			return c.NoContent(401)
+		}
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		if err != nil {
@@ -36,7 +39,7 @@ func GetReview(db *mongo.Database) echo.HandlerFunc {
 			return err
 		}
 
-		reviewTask,reviewFollow,err := svc.History(user.DisplayName,taskCollection)
+		reviewTask,reviewFollow,err := svc.Review(user.DisplayName,taskCollection)
 		if err != nil {
 			return err
 		}
