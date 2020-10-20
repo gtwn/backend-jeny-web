@@ -94,7 +94,7 @@ func main() {
 	// Middleware debug
 	e.Use(middleware.Logger())
 
-	e.GET("/callback", route.LineToken(route.LineTokenConfig{
+	e.GET("/dashboard", route.LineToken(route.LineTokenConfig{
 		LineAPI 		: cfg.LineTokenAPI,
 		ChannelID 		: cfg.ChannelID,
 		ChannelSecret	: cfg.ChannelSecret,
