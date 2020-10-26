@@ -25,6 +25,10 @@ type Task struct {
 	Status 		string				`bson:"status,omitempty" json:"status"`
 }
 
+type TaskResponse struct {
+	Task 		[]Task			`json:"task"`
+}
+
 type HistoryResponse struct {
 	TaskHistory		[]Task		`json:"task_history"`
 	FollowHistory	[]Task		`json:"follow_history"`
@@ -36,7 +40,7 @@ type ReviewResponse struct {
 }
 
 type FollowResponse struct {
-	Follow 			[]Task
+	Follow 			[]Task		`json:"follow"`
 }
 
 type Msg struct {
