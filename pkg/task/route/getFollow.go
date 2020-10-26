@@ -38,7 +38,7 @@ func GetFollow(db *mongo.Database) echo.HandlerFunc {
 			return err
 		}
 
-		task,err := svc.Task(user.DisplayName,taskCollection)
+		task,err := svc.Follow(user.DisplayName,taskCollection)
 		if err != nil {
 			return err
 		}
