@@ -43,6 +43,8 @@ func GetFollow(db *mongo.Database) echo.HandlerFunc {
 			return err
 		}
 		
-		return c.JSON(200,task)
+		return c.JSON(200,model.FollowResponse{
+			Follow: *task,
+		})
 	}
 }

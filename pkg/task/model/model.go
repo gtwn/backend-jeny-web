@@ -35,6 +35,10 @@ type ReviewResponse struct {
 	FollowReview	[]Task		`json:"follow_review"`
 }
 
+type FollowResponse struct {
+	Follow 			[]Task
+}
+
 type Msg struct {
 	Type	string				`json:"type"`
 	Text	string				`json:"text"`
