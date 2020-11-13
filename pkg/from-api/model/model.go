@@ -50,6 +50,7 @@ type Task struct {
 	CreatedAt   time.Time          	`bson:"created_at,omitempty"	json:"created_at"`
 	DoneAt      time.Time          	`bson:"done_at,omitempty"	json:"done_at"`
 	FromID		string				`bson:"from_id,omitempty"	json:"from_id"`
+	OrderID		string				`bson:"order_id,omitempty"	json:"order_id"`
 	GroupID		string				`bson:"group_id,omitempty"	json:"group_id"`
 	Status 		string				`bson:"status,omitempty"	json:"status"`
 }

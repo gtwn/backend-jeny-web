@@ -10,8 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func RejectTask(userID string,TaskID string,taskCollection *mongo.Collection) (*model.Task,error) {
-	var stError error
+func ReviewTask(TaskID string,taskCollection *mongo.Collection) (*model.Task,error) {
+
 	var taskResult model.Task
 	id, _ := primitive.ObjectIDFromHex(TaskID)
 	ctx,_ := context.WithTimeout(context.Background(), 10*time.Second)
@@ -19,10 +19,8 @@ func RejectTask(userID string,TaskID string,taskCollection *mongo.Collection) (*
 	err != nil {
 		return nil,err
 	}
-	if taskResult.FromID != userID {
-		return nil, stError
-	}
-	_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"In Progress"}}) 
+
+	_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Review"}}) 
 	if err != nil {
 		return nil,err
 	}

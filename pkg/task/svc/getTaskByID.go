@@ -20,10 +20,10 @@ func GetTaskByID(TaskID string,taskCollection *mongo.Collection) (*model.Task,er
 		return nil,err
 	}
 
-	_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Review"}}) 
-	if err != nil {
-		return nil,err
-	}
+	// _,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Review"}}) 
+	// if err != nil {
+	// 	return nil,err
+	// }
 	
 
 	return &taskResult,nil

@@ -15,7 +15,7 @@ func GetLineToken(LineAPI string,ChannelID string,ChannelSecret string,c echo.Co
 	client := resty.New()
 	code := c.QueryParam("code")
 	url := c.Request().Host
-	redirectURI := fmt.Sprintf("https://%s/callback",url)
+	redirectURI := fmt.Sprintf("https://%s/dashboard",url)
 
 	authSuccess := model.AuthSuccess{}
 	if _,err := client.R().

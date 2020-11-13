@@ -21,6 +21,7 @@ type Task struct {
 	CreatedAt time.Time          `bson:"created_at,omitempty"`
 	DoneAt    string             `bson:"done_at,omitempty"`
 	FromID    string             `bson:"from_id,omitempty"`
+	OrderID	  string			 `bson:"order_id,omitempty"`
 	GroupID   string             `bson:"group_id,omitempty"`
 	Status    string             `bson:"status,omitempty"`
 }

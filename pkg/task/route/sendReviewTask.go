@@ -32,7 +32,7 @@ func SendReviewTask(cfg ReviewTaskConfig,db *mongo.Database) echo.HandlerFunc {
 			return c.NoContent(401)
 		}
 
-		task, err := svc.GetTaskByID(id,taskCollection)
+		task, err := svc.ReviewTask(id,taskCollection)
 		if err != nil {
 			return err
 		}

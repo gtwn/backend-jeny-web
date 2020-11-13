@@ -24,7 +24,7 @@ func SendDoneTask(cfg DoneTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		}
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
-		user := db.Collection("user")
+		// user := db.Collection("user")
 		taskCollection := db.Collection("task")
 		if err != nil {
 			return err
@@ -38,9 +38,9 @@ func SendDoneTask(cfg DoneTaskConfig,db *mongo.Database) echo.HandlerFunc {
 			return err
 		}
 		// เอาชื่อ OrderTo หา User ในระบบ
-		userResult, _ := svc.GetUserByDisplay(task.OrderTo,user) 
+		// userResult, _ := svc.GetUserByDisplay(task.OrderTo,user) 
 		
-		if err := svc.PushMsgDoneTask(task,cfg.AccessToken,userResult.UserID) ;
+		if err := svc.PushMsgDoneTask(task,cfg.AccessToken,task.OrderID) ;
 		err != nil {
 			return err
 		}

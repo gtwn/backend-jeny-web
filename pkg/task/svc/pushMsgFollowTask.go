@@ -8,7 +8,7 @@ import (
 	"github.com/jenywebapp/pkg/task/model"
 )
 
-func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,UserID string) error {
+func PushMsgFollowTask(Task *model.Task,AccessToken string,OrderID string,UserID string) error {
 	
 	client := resty.New()
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
@@ -29,17 +29,56 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,User
 	// ส่งแจ้งเตือนให้คนที่เราตามงาน
 
 	// กรณีไม่มี User ในระบบให้ส่งตามใน Group แทน
-	if User == nil {
-		fmt.Printf("user is nil"+Task.GroupID)
+	// if User == nil {
+	// 	fmt.Printf("user is nil"+Task.GroupID)
+	// 	pushToFollow := &model.PushMsg{
+	// 		To: Task.GroupID,
+	// 		Message: *msgFollow,
+	// 	}
+	// 	jsonFollow,err := json.Marshal(pushToFollow)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	// ส่งหาคนสั่ง
+	
+	// 	if _,err := client.R().
+	// 	SetHeaders(map[string]string{
+	// 		"Content-Type": "application/json",
+	// 		"Authorization" : auth,
+	// 	}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+	// 		return err
+	// 	}	
+	// } else {	// มี user ในระบบ
+	// 	fmt.Printf("user is not nil"+User.UserID)
+	// 	pushToFollow := &model.PushMsg{
+	// 		To: OrderID,
+	// 		Message: *msgFollow,
+	// 	}
+	// 	jsonFollow,err := json.Marshal(pushToFollow)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	// ส่งหาคนสั่ง
+	
+	// 	if _,err := client.R().
+	// 	SetHeaders(map[string]string{
+	// 		"Content-Type": "application/json",
+	// 		"Authorization" : auth,
+	// 	}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+	// 		return err
+	// 	}	
+	// }
+
+	fmt.Printf("user is not nil"+OrderID)
 		pushToFollow := &model.PushMsg{
-			To: Task.GroupID,
+			To: OrderID,
 			Message: *msgFollow,
 		}
 		jsonFollow,err := json.Marshal(pushToFollow)
 		if err != nil {
 			return err
 		}
-		// ส่งหาคนสั่ง
+		// ส่งหาคนโดนสั่ง
 	
 		if _,err := client.R().
 		SetHeaders(map[string]string{
@@ -48,26 +87,6 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,User *model.User,User
 		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
 			return err
 		}	
-	} else {	// มี user ในระบบ
-		fmt.Printf("user is not nil"+User.UserID)
-		pushToFollow := &model.PushMsg{
-			To: User.UserID,
-			Message: *msgFollow,
-		}
-		jsonFollow,err := json.Marshal(pushToFollow)
-		if err != nil {
-			return err
-		}
-		// ส่งหาคนสั่ง
-	
-		if _,err := client.R().
-		SetHeaders(map[string]string{
-			"Content-Type": "application/json",
-			"Authorization" : auth,
-		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
-			return err
-		}	
-	}
 	
 	jsonSend,err := json.Marshal(pushSend)
 	if err != nil{

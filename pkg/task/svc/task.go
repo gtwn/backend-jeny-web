@@ -10,21 +10,30 @@ import (
 )
 
 
-func Task(display []string, taskCollection *mongo.Collection) (*[]model.Task,error) {
+func Task(userID string, taskCollection *mongo.Collection) (*[]model.Task,error) {
 	var taskResult []model.Task
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	
-	for _,disp := range display {
-		var task []model.Task
-		taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp,"status":"In Progress"})
-		if err != nil {
+	// for _,disp := range display {
+	// 	var task []model.Task
+	// 	taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp,"status":"In Progress"})
+	// 	if err != nil {
 			
-		}
-		if err := taskFind.All(ctx,&task); err == nil {
-			taskResult = append(taskResult,task...)
-		}
+	// 	}
+	// 	if err := taskFind.All(ctx,&task); err == nil {
+	// 		taskResult = append(taskResult,task...)
+	// 	}
 		
+	// }
+
+	taskFind,err := taskCollection.Find(ctx, bson.M{"order_id":userID,"status":"In Progress"})
+	if err != nil && err != mongo.ErrNoDocuments {
+		return nil,err
+	}
+
+	if err := taskFind.All(ctx,&taskResult) ; err != nil && err != mongo.ErrNoDocuments {
+		return nil,err
 	}
 
 	return &taskResult,nil
