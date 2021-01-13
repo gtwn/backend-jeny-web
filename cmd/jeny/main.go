@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jenywebapp/cmd/jeny/config"
+	"github.com/jenywebapp/cmd/jeny/Config"
 	route "github.com/jenywebapp/pkg/from-api/route"
 	routeTask "github.com/jenywebapp/pkg/task/route"
 
@@ -93,7 +93,7 @@ func main() {
 
 	// Middleware debug
 	e.Use(middleware.Logger())
-
+	e.GET("/hello", routeTask.Hello)
 	e.GET("/dashboard", route.LineToken(route.LineTokenConfig{
 		LineAPI 		: cfg.LineTokenAPI,
 		ChannelID 		: cfg.ChannelID,
