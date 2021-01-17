@@ -34,7 +34,7 @@ func GetHistory(db *mongo.Database) echo.HandlerFunc {
 
 		historyTask,historyFollow,err := svc.History(payload.Sub,taskCollection)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		
 		return c.JSON(200,model.HistoryResponse{

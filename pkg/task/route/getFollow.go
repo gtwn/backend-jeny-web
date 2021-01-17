@@ -28,7 +28,7 @@ func GetFollow(db *mongo.Database) echo.HandlerFunc {
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		if sv.CheckExpire(expire) != true {
 			return c.NoContent(401)
@@ -40,7 +40,7 @@ func GetFollow(db *mongo.Database) echo.HandlerFunc {
 
 		task,err := svc.Follow(payload.Sub,taskCollection)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		
 		return c.JSON(200,model.FollowResponse{

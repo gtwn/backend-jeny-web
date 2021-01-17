@@ -101,6 +101,9 @@ func main() {
 		},db))
 
 	e.GET("/logout",route.Revoke())
+	e.GET("/group/:id/profile", route.UserProfile(route.UserProfileConfig{
+		AccessToken: cfg.ChannelAccessToken,
+	}))
 	taskGrp := e.Group("/task")
 
 	taskGrp.GET("",routeTask.GetTask(db))

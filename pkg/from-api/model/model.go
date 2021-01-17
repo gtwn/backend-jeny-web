@@ -54,3 +54,12 @@ type Task struct {
 	GroupID		string				`bson:"group_id,omitempty"	json:"group_id"`
 	Status 		string				`bson:"status,omitempty"	json:"status"`
 }
+
+
+type GroupID struct {
+	MemberIDs	[]string			`json:"memberIds"`
+}
+
+type UserProfileInGroup struct {
+	UsersProfile 		[]Profile
+}
