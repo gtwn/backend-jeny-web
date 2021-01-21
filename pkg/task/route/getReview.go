@@ -21,7 +21,7 @@ func GetReview(db *mongo.Database) echo.HandlerFunc {
 		
 		// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 		// userCollection := db.Collection("user")
-		taskCollection := db.Collection("task")
+		taskCollection := db.Collection("tasklist")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
 		if header == ""{
 			return c.NoContent(401)
