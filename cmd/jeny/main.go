@@ -126,5 +126,5 @@ func main() {
 		AccessToken: cfg.ChannelAccessToken,
 	},db))
 	
-	e.Logger.Fatal(e.Start(fmt.Sprint(":", cfg.Port)))
+	e.Logger.Fatal(e.StartTLS(fmt.Sprint(":", cfg.Port), "cert.pem","key.pem"))
 }
