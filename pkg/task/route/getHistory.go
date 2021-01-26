@@ -17,7 +17,7 @@ func GetHistory(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		
-		taskCollection := db.Collection("task")
+		taskCollection := db.Collection("tasklist")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
 		if header == ""{
 			return c.NoContent(401)
@@ -34,7 +34,7 @@ func GetHistory(db *mongo.Database) echo.HandlerFunc {
 
 		historyTask,historyFollow,err := svc.History(payload.Sub,taskCollection)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		
 		return c.JSON(200,model.HistoryResponse{

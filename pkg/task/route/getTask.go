@@ -17,7 +17,7 @@ func GetTask(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		
-		taskCollection := db.Collection("task")
+		taskCollection := db.Collection("tasklist")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
 		if header == ""{
 			return c.NoContent(401)
@@ -25,7 +25,7 @@ func GetTask(db *mongo.Database) echo.HandlerFunc {
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		if sv.CheckExpire(expire) != true {
 			return c.NoContent(401)
@@ -33,7 +33,7 @@ func GetTask(db *mongo.Database) echo.HandlerFunc {
 	
 		task,err := svc.Task(payload.Sub,taskCollection)
 		if err != nil {
-			return err
+			return c.NoContent(400)
 		}
 		
 		return c.JSON(200,model.TaskResponse{
