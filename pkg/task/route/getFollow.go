@@ -20,7 +20,7 @@ func GetFollow(db *mongo.Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 		// userCollection := db.Collection("user")
-		taskCollection := db.Collection("tasklist")
+		taskCollection := db.Collection("task")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
 		if header == ""{
 			return c.NoContent(401)

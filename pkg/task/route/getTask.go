@@ -17,7 +17,7 @@ func GetTask(db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		
-		taskCollection := db.Collection("tasklist")
+		taskCollection := db.Collection("task")
 		header := c.Request().Header.Get("Authorization")		// key IDToken
 		if header == ""{
 			return c.NoContent(401)

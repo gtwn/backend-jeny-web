@@ -31,7 +31,7 @@ func LineToken(cfg LineTokenConfig,db *mongo.Database) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 
-		taskCollection := db.Collection("tasklist")
+		taskCollection := db.Collection("task")
 
 		// authSucess,payload,err := svc.GetLineToken(cfg.LineAPI,cfg.ChannelID,cfg.ChannelSecret,c)
 		// if err != nil {

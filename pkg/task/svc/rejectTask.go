@@ -22,10 +22,18 @@ func RejectTask(userID string,TaskID string,taskCollection *mongo.Collection) (*
 	if taskResult.FromID != userID {
 		return nil, stError
 	}
-	_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"In Progress"}}) 
-	if err != nil {
-		return nil,err
+	if taskResult.Type == "group" {
+		_,err := taskCollection.UpdateMany(ctx, bson.M{"sub_id": taskResult.SubID}, bson.M{"$set" : bson.M{"status":"In Progress"}}) 
+		if err != nil {
+			return nil,err
+		}
+	} else {
+		_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"In Progress"}}) 
+		if err != nil {
+			return nil,err
+		}
 	}
+	
 	
 
 	return &taskResult,nil

@@ -25,7 +25,9 @@ type Task struct {
 	FromID		string				`bson:"from_id,omitempty" json:"from_id"`
 	OrderID		string				`bson:"order_id,omitempty" json:"order_id"`
 	GroupID		string				`bson:"group_id,omitempty" json:"group_id"`
-	Type 	string					`bson:"type,omitempty"	json:"tpye"`
+	Member		[]string			`bson:"member,omitempty" json:"member"`
+	MemberID    []string			`bson:"member_id,omitempty" json:"member_id"`
+	Type 		string				`bson:"type,omitempty"	json:"tpye"`
 	Status 		string				`bson:"status,omitempty" json:"status"`
 }
 
@@ -54,5 +56,11 @@ type Msg struct {
 
 type PushMsg struct {
 	To 			string			`json:"to"`
+	Message 	[]Msg			`json:"messages"`
+}
+
+
+type PushMultiple struct {
+	To			[]string		`json:"to"`
 	Message 	[]Msg			`json:"messages"`
 }

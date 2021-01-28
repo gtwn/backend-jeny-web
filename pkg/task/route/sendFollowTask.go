@@ -25,7 +25,7 @@ func SendFollowTask(cfg FollowTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		// user := db.Collection("user")
-		taskCollection := db.Collection("tasklist")
+		taskCollection := db.Collection("task")
 		if err != nil {
 			return c.NoContent(400)
 		}

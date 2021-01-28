@@ -26,7 +26,8 @@ func PushMsgRejectTask(Task *model.Task,AccessToken string,UserID string) error 
 	// ส่งหาเรา
 	pushSend := &model.PushMsg{
 		To: Task.FromID,
-		Message: *msgSend}
+		Message: *msgSend,
+	}
 	// ส่งหาคนส่งงาน
 	pushToFollow := &model.PushMsg{
 		To: Task.FromID,
@@ -43,16 +44,34 @@ func PushMsgRejectTask(Task *model.Task,AccessToken string,UserID string) error 
 		return err
 	}
 
-	// ส่งหาคนสั่ง
-	
-	if _,err := client.R().
-	SetHeaders(map[string]string{
-		"Content-Type": "application/json",
-		"Authorization" : auth,
-	}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
-		return err
-	}	
-	// ส่งหาเรา
+	// ส่งหาคนส่งงาน
+
+	if Task.Type == "group" {
+		pushToFollow := &model.PushMultiple{
+			To: Task.MemberID,
+			Message: *msgFollow,
+		}
+		jsonFollow,err := json.Marshal(pushToFollow)
+		if err != nil {
+			return err
+		}
+		if _,err := client.R().
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"Authorization" : auth,
+		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/multicast") ; err != nil {
+			return err
+		}	
+	} else {
+		if _,err := client.R().
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"Authorization" : auth,
+		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+			return err
+		}	
+	}
+	// ส่งหาผู้สั่งงาน
 	if _,err := client.R().
 	SetHeaders(map[string]string{
 		"Content-Type": "application/json",
