@@ -93,6 +93,7 @@ func main() {
 
 	// Middleware debug
 	e.Use(middleware.Logger())
+	e.GET("/", routeTask.Hello)
 	e.GET("/hello", routeTask.Hello)
 	e.GET("/dashboard", route.LineToken(route.LineTokenConfig{
 		LineAPI 		: cfg.LineTokenAPI,
