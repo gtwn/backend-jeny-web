@@ -28,23 +28,23 @@ func PushMsgFollowTask(Task *model.Task,AccessToken string,OrderID string,UserID
 		Message: *msgSend}
 
 	fmt.Printf("user is not nil"+OrderID)
-		pushToFollow := &model.PushMsg{
-			To: OrderID,
-			Message: *msgFollow,
-		}
-		jsonFollow,err := json.Marshal(pushToFollow)
-		if err != nil {
-			return err
-		}
-		// ส่งหาคนโดนสั่ง
-	
-		if _,err := client.R().
-		SetHeaders(map[string]string{
-			"Content-Type": "application/json",
-			"Authorization" : auth,
-		}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
-			return err
-		}	
+	pushToFollow := &model.PushMsg{
+		To: OrderID,
+		Message: *msgFollow,
+	}
+	jsonFollow,err := json.Marshal(pushToFollow)
+	if err != nil {
+		return err
+	}
+	// ส่งหาคนโดนสั่ง
+
+	if _,err := client.R().
+	SetHeaders(map[string]string{
+		"Content-Type": "application/json",
+		"Authorization" : auth,
+	}).SetBody(string(jsonFollow)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+		return err
+	}	
 	
 	jsonSend,err := json.Marshal(pushSend)
 	if err != nil{

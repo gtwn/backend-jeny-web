@@ -21,7 +21,7 @@ func ReviewTask(TaskID string,taskCollection *mongo.Collection) (*model.Task,err
 	}
 
 	if taskResult.Type == "group" {
-		_,err := taskCollection.UpdateOne(ctx, bson.M{"sub_id": taskResult.SubID}, bson.M{"$set" : bson.M{"status":"Review"}}) 
+		_,err := taskCollection.UpdateMany(ctx, bson.M{"sub_id": taskResult.SubID}, bson.M{"$set" : bson.M{"status":"Review"}}) 
 		if err != nil {
 			return nil,err
 		}

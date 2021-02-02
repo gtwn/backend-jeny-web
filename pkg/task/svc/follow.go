@@ -12,7 +12,6 @@ import (
 
 func Follow(userID string, taskCollection *mongo.Collection) (*[]model.Task,error) {
 	var followTaskResult []model.Task
-
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	
 	// for _,disp := range display {
@@ -33,6 +32,8 @@ func Follow(userID string, taskCollection *mongo.Collection) (*[]model.Task,erro
 	if err := taskFind.All(ctx,&followTaskResult); err != nil && err != mongo.ErrNoDocuments {
 		return nil,err
 	}
+
+	
 
 	return &followTaskResult,nil
 }
