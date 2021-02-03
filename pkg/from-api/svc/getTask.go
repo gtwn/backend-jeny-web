@@ -27,7 +27,7 @@ func GetTask(userID string, taskCollection *mongo.Collection) (*[]model.Task,err
 		
 	// }
 
-	taskFind,err := taskCollection.Find(ctx, bson.M{"order_id":userID,"status":"In Progress"})
+	taskFind,err := taskCollection.Find(ctx, bson.M{"member_id": bson.M{"$elemMatch":bson.M{"$eq":userID}},"status":"In Progress"})
 	if err != nil && err != mongo.ErrNoDocuments {
 		return nil,err
 	}

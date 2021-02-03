@@ -17,7 +17,7 @@ func History(userID string, taskCollection *mongo.Collection) (*[]model.Task,*[]
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	
-	taskFind,err := taskCollection.Find(ctx, bson.M{"order_id":userID,"status":"Done"})
+	taskFind,err := taskCollection.Find(ctx, bson.M{"member_id": bson.M{"$elemMatch":bson.M{"$eq":userID}},"$or": []bson.M{{"status":"Done"},{"status":"Reject"}}})
 	if err != nil && err != mongo.ErrNoDocuments {
 		return nil,nil,err
 	}

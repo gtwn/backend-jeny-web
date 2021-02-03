@@ -32,7 +32,6 @@ func Follow(userID string, taskCollection *mongo.Collection) (*[]model.Task,erro
 	if err := taskFind.All(ctx,&followTaskResult); err != nil && err != mongo.ErrNoDocuments {
 		return nil,err
 	}
-
 	
 
 	return &followTaskResult,nil

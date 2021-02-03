@@ -9,7 +9,7 @@ import (
 	"github.com/jenywebapp/pkg/task/model"
 )
 
-func PushMsgSendTask(Task *model.Task,AccessToken string,Display string,UserID string) error {
+func PushMsgSendTask(Task *model.Task,AccessToken string,Display string) error {
 	
 	client := resty.New()
 	auth := fmt.Sprintf("Bearer %s",AccessToken)
@@ -21,21 +21,19 @@ func PushMsgSendTask(Task *model.Task,AccessToken string,Display string,UserID s
 		{Type: "text",
 		Text: "คุณ: "+Display+"ส่งงานให้คุณ\n กรุณาตรวจสอบงานด้วยค่ะ",
 	}}
-	// my
-	pushSend := &model.PushMsg{
-		To: UserID,
+	// ผู้ส่งงาน
+	pushSend := &model.PushMultiple{
+		To: Task.MemberID,
 		Message: *msgSend}
-	// Commander
+	// ผู้สั่งงาน
 	pushToFollow := &model.PushMsg{
 		To: Task.FromID,
 		Message: *msgFollow,
 	}
-	// spew.Dump(msgFollow)
 	jsonSend,err := json.Marshal(pushSend)
 	if err != nil{
 		return err
 	}
-	fmt.Printf(string(jsonSend))
 	jsonFollow,err := json.Marshal(pushToFollow)
 	if err != nil {
 		return err
@@ -55,7 +53,7 @@ func PushMsgSendTask(Task *model.Task,AccessToken string,Display string,UserID s
 	SetHeaders(map[string]string{
 		"Content-Type": "application/json",
 		"Authorization" : auth,
-	}).SetBody(string(jsonSend)).Post("https://api.line.me/v2/bot/message/push") ; err != nil {
+	}).SetBody(string(jsonSend)).Post("https://api.line.me/v2/bot/message/multicast") ; err != nil {
 		return err
 	}
 	return nil

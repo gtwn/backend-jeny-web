@@ -25,7 +25,7 @@ func SendRejectTask(cfg RejectTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
 		// user := db.Collection("user")
-		taskCollection := db.Collection("task")
+		taskCollection := db.Collection("tasks")
 		if err != nil {
 			return c.NoContent(400)
 		}
@@ -40,7 +40,7 @@ func SendRejectTask(cfg RejectTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		// เอาชื่อ OrderTo หา User ในระบบ
 		// userResult, _ := svc.GetUserByDisplay(task.OrderTo,user) 
 		
-		if err := svc.PushMsgRejectTask(task,cfg.AccessToken,task.OrderID) ;
+		if err := svc.PushMsgRejectTask(task,cfg.AccessToken) ;
 		err != nil {
 			return c.NoContent(400)
 		}

@@ -24,7 +24,7 @@ func SendReviewTask(cfg ReviewTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		}
 		payload,err := jwt.DecodeIDToken(header)
 		expire := time.Unix(payload.Exp,0)
-		taskCollection := db.Collection("task")
+		taskCollection := db.Collection("tasks")
 		if err != nil {
 			return c.NoContent(400)
 		}
@@ -36,7 +36,7 @@ func SendReviewTask(cfg ReviewTaskConfig,db *mongo.Database) echo.HandlerFunc {
 		if err != nil {
 			return c.NoContent(400)
 		}
-		if err := svc.PushMsgSendTask(task,cfg.AccessToken,payload.Name,payload.Sub) ;
+		if err := svc.PushMsgSendTask(task,cfg.AccessToken,payload.Name) ;
 		err != nil {
 			return c.NoContent(400)
 		}

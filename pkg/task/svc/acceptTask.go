@@ -20,24 +20,9 @@ func AcceptTask(TaskID string,taskCollection *mongo.Collection) (*model.Task,err
 		return nil,err
 	}
 
-	if taskResult.Type == "group" {
-		_,err := taskCollection.UpdateMany(ctx, bson.M{"sub_id": taskResult.SubID}, bson.M{"$set" : bson.M{"status":"Done","done_at":time.Now()}})
-		if err != nil {
-			return nil,err
-		}
-	} else {
-		_,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Done","done_at":time.Now()}}) 
-		if err != nil {
-			return nil,err
-		}
+	if _,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Done","done_at":time.Now()}}) ; err != nil {
+		return nil,err
 	}
 	
-	// ดัก case from_id ต้องตรงกับ user_id
-	// _,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Done","done_at":time.Now()}}) 
-	// if err != nil {
-	// 	return nil,err
-	// }
-	
-
 	return &taskResult,nil
 }

@@ -17,27 +17,8 @@ func Review(userID string, taskCollection *mongo.Collection) (*[]model.Task,*[]m
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	
-	// for _,disp := range display {
-	// 	var task []model.Task
-	// 	var follow []model.Task
-	// 	taskFind,err := taskCollection.Find(ctx, bson.M{"order_to":disp,"status":"Review"})
-	// 	if err != nil {
-			
-	// 	}
-	// 	if err := taskFind.All(ctx,&task); err == nil {
-	// 		ReviewTaskResult = append(ReviewTaskResult,task...)
-	// 	}
-
-	// 	followFind,err := taskCollection.Find(ctx, bson.M{"order_by":disp,"status":"Review"})
-	// 	if err != nil {
-			
-	// 	}
-	// 	if err := followFind.All(ctx,&follow) ; err == nil {
-	// 		ReviewFollowResult = append(ReviewFollowResult,follow...)
-	// 	}
-		
-	// }
-	taskFind,err := taskCollection.Find(ctx, bson.M{"order_id":userID,"status":"Review"})
+	
+	taskFind,err := taskCollection.Find(ctx, bson.M{"member_id": bson.M{"$elemMatch":bson.M{"$eq":userID}},"status":"Review"})
 	if err != nil && err != mongo.ErrNoDocuments {
 		return nil,nil,err
 	}
