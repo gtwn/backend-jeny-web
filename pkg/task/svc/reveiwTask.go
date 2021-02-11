@@ -20,7 +20,7 @@ func ReviewTask(TaskID string,taskCollection *mongo.Collection) (*model.Task,err
 		return nil,err
 	}
 
-	if _,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Review"}}) ; err != nil {
+	if _,err := taskCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set" : bson.M{"status":"Review", "done_at":time.Now()}}) ; err != nil {
 		return nil,err
 	}
 
